@@ -1,0 +1,86 @@
+ROBOT 15 × 15 — DIAGRAMA Y EXPORTACIÓN A JFLAP
+
+INSTALAR LA ACTUALIZACIÓN EN TU PROYECTO EXISTENTE
+1. Extrae este ZIP en una carpeta nueva.
+2. En IntelliJ, detén la ejecución del robot.
+3. Copia TODOS los cinco archivos de robot/src a la carpeta src del proyecto.
+   Reemplaza los del mismo nombre. Deben quedar juntos:
+   Main.kt, MotorADP.kt, BuscadorRuta.kt, AutomataRobot.kt y VistaAutomata.kt.
+4. Abre Main.kt y ejecuta el main de RobotLaberinto al final del archivo.
+No abras este paquete como un proyecto nuevo: es una actualización del
+proyecto que ya tienes configurado con Kotlin y Java 17 o superior.
+
+QUÉ SIGUE FUNCIONANDO IGUAL
+- Editor de paredes, entrada y salida.
+- Cálculo de ruta más corta.
+- Trazado amarillo desde el robot hacia la salida.
+- Carga inversa de la pila y recorrido azul hasta vaciarla en la meta.
+- Exploración naranja con retrocesos cuando no existe ruta.
+- Pausa, velocidad, limpieza y reinicio.
+
+LOS DOS BOTONES NUEVOS
+Ver autómata: abre una ventana independiente con el diagrama de la ruta
+más corta del tablero actual. No modifica ni detiene la simulación.
+Exportar a JFLAP: permite guardar el mismo modelo en un archivo .jff.
+También puedes exportar desde la ventana del diagrama.
+Puedes usarlos antes o después de ejecutar el robot.
+
+EN LA VENTANA DEL AUTÓMATA
+- Diagrama: carga (azul claro), recorrido (verde) y aceptación (doble círculo).
+- Zoom y botones Carga / Recorrido / Aceptación para navegar.
+- Tabla de transiciones: origen, destino, entrada, símbolo retirado y añadido.
+- Abajo aparece la cadena de movimientos; puedes seleccionarla y copiarla.
+- La flecha de inicio entra en c0; q0 no tiene por qué ser el estado inicial
+  del ADP completo, pues primero hay que cargar la pila.
+- Es una instantánea: si cambias el tablero, abre/exporta de nuevo para
+  obtener el modelo nuevo. Una ventana ya abierta conserva su instantánea.
+
+ABRIR EL ARCHIVO EN JFLAP
+1. Pulsa Exportar a JFLAP y guarda Robot_Automata.jff.
+2. Abre JFLAP por separado. Sitio oficial: https://www.jflap.org/
+3. File > Open > selecciona el archivo .jff guardado.
+4. Copia la cadena de movimientos mostrada en Ver autómata.
+5. Input > Step by State y pega únicamente R, D, L y U, sin flechas ni espacios.
+6. Si pregunta el criterio, elige Empty Stack.
+7. Avanza por las transiciones y observa la pila.
+También puedes usar Fast Run para comprobar la cadena.
+JFLAP empieza con Z como fondo de pila; Z corresponde a Z₀ en el programa.
+ε significa vacío: se exporta como un campo XML vacío, no como una letra.
+
+QUÉ REPRESENTA EL MODELO
+Cada archivo representa UNA ruta preparada de un laberinto concreto.
+La búsqueda BFS y la animación naranja son algoritmos auxiliares y no
+se incluyen como transiciones del ADP que ejecuta la ruta aceptada.
+No es un diagrama de flujo de funciones ni un mapa de clases.
+
+c0 ... cn cargan los n movimientos, en orden inverso, sin consumir entrada.
+Cada carga lee ε, retira el tope X y coloca movimiento+X, con el tope a la
+izquierda. Al terminar la carga pasa al estado q de la casilla de entrada.
+Una transición de recorrido lee el movimiento, retira ese mismo símbolo
+sin añadir otro, y pasa a la casilla vecina correspondiente.
+En la salida, una transición ε retira Z y llega a ACEPTA.
+La cadena solo se acepta si se consumió entera. Por eso las cadenas
+incompletas, modificadas o con símbolos sobrantes se rechazan.
+El modelo de esta versión es determinista para la ruta preparada; no
+se presenta como un simulador de bifurcaciones no deterministas.
+
+Si no existe una ruta hacia la salida, los botones explican que no hay
+un recorrido aceptado que representar. BUSCAR Y EJECUTAR sigue mostrando
+la exploración naranja y el aviso al terminar, como antes.
+
+EJEMPLO INCLUIDO
+En ejemplos/ están Robot_Demo.jff y cadena_demo.txt.
+Puedes abrir ese ejemplo en JFLAP antes de generar el tuyo.
+Corresponde al tablero libre con entrada arriba a la izquierda y salida
+abajo a la derecha. No corresponde a un tablero modificado con paredes.
+
+VALIDACIÓN
+- Proyecto compilado con Kotlin 1.9.24 para Java 17.
+- 646 comprobaciones: lectura y simulación real con el motor de JFLAP 7.1,
+  criterios por estado final y pila vacía, cadenas válidas e inválidas,
+  cuatro direcciones, ruta vacía, ejemplo y laberintos aleatorios.
+- Transiciones comparadas paso a paso con MotorADP.
+- Diagrama renderizado e inspeccionado.
+- Funciones de búsqueda, trazado, ejecución, fallo, pausa y edición
+  conservadas; MotorADP.kt y BuscadorRuta.kt sin cambios.
+El archivo no contiene ejecutables, JAR, BAT ni bibliotecas compiladas.

@@ -1,0 +1,14 @@
+Ejemplo: tablero 15 × 15 libre, entrada q0, salida q224.
+Cadena de entrada (copiar únicamente la línea siguiente):
+RRRRRRRRRRRRRRDDDDDDDDDDDDDD
+
+28 movimientos: 14 a la derecha y 14 hacia abajo.
+El archivo Robot_Demo.jff contiene 59 estados:
+29 de carga, 29 posiciones del recorrido y un estado de aceptación.
+
+En JFLAP: File > Open > Robot_Demo.jff.
+Input > Step by State para avanzar paso a paso.
+Cuando pregunte el criterio, elige Empty Stack (pila vacía).
+También se probó Final State: se alcanza ACEPTA después de retirar Z.
+Durante la carga la entrada no se consume; luego se lee un movimiento
+por transición y se desapila el mismo símbolo.
